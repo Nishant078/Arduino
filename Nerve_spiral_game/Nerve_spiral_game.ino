@@ -53,7 +53,7 @@ void setup() {
   //getting global score from EEPROM
   global_best_time = get_global_best_time();
   if (global_best_time == 0)
-    global_best_time = -1;
+    global_best_time = -1;   
   Serial.print("Global best time is ");
   Serial.println(global_best_time);
 
@@ -74,7 +74,7 @@ void loop() {
 
     start_time = millis();
 
-    while (digitalRead(s2) && digitalRead(s3))
+    while (digitalRead(s2) && digitalRead(s3))          //waiting till either wire is touched or player reached end-point
     {
       display_time(millis() - start_time);
     }
@@ -136,7 +136,9 @@ void write_to_seven_segment(byte segment, byte value)         //write data to se
 
 void display_time(unsigned long t)          //prepare number to show on seven segment displays
 {
-  if (t < 100000)
+  Serial.print("Time : ");
+  Serial.println(t);
+  if (t < 100000)   
   {
     write_to_seven_segment(0, segment_for_number[(t / 10000) % 10]);
     write_to_seven_segment(1, segment_for_number[(t / 1000) % 10] & mask_for_dot);
@@ -218,7 +220,7 @@ unsigned long get_global_best_time()
   return ((t1 << 24) | (t2 << 16) | (t3 << 8) | (t4));
 }
 
-void set_global_best_time(unsigned long t)
+void set_global_best_time(unsigned long t)          //string value to EEPROM           
 {
   EEPROM.write(0, (t >> 24));
   EEPROM.write(1, (t >> 16));
